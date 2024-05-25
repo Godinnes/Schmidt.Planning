@@ -1,0 +1,43 @@
+﻿@page "/Users"
+@using Schmidt.Planning.Application;
+@using Schmidt.Planning.Domain.Entities;
+@inject IUserService _userService;
+
+<h3>Users</h3>
+
+<NavLink class="nav-link" href="Users/Create">
+    <span>Cadastrar</span>
+</NavLink>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in allUsers)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td><button value="Excluir" class="btn btn-danger" @onclick="() => RemoveAsync(user.ID)">Excluir</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private IEnumerable<User> allUsers = Enumerable.Empty<User>();
+    protected override async Task OnInitializedAsync()
+    {
+        allUsers = await _userService.AllAsync();
+    }
+    private Task RemoveAsync(Guid id)
+    {
+        return _userService.RemoveAsync(id);
+    }
+}
